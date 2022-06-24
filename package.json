@@ -2,10 +2,10 @@
   "name": "sistema-web-de-encuestas",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "dev": "nodemon src",
-    "start": "node index"
+    "start": "node app"
   },
   "keywords": [],
   "author": "",
