@@ -1,0 +1,65 @@
+<head>
+	<title>Encuestas Asignadas - SWEIS
+		</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/inicio.css"/>
+	
+</head>
+<body onload="">
+	<script rel="stylesheet" type="text/javascript" src=""></script>
+
+
+
+<div  id="banner" class="container-fluid">
+	<div class="row ml-5">
+		<div class="col-md-8 mt-1 text-white text-center">
+			<img src="../images/logo.png" class="d-block" alt='...' height="70px" width="70px">
+		</div>
+		<div id="fuente" style="display: flex; align-items: center;" class="col-md-4 mt-2 text-white text-right">
+				<a href="/inicio"><button type="button" onclick ="" class="btn text-white" style="font-family:Impact; font-size: 20px;">Catálogo de Encuestas</button></a>
+				<a href="#">
+					<button type="button" class="btn text-white" style="font-family: Impact; font-size: 20px;">Mi cuenta</button>
+					<img src="../../images/micuenta.png" class="align-right" alt='...' height="30px" width="30px">
+				</a>
+						
+		</div>	
+				
+	</div>
+</div><br>
+
+
+<div style="margin: 40px">
+	<h2 align="center">Encuestas Asignadas</h2>
+</div>
+
+	<%for(let i=0; i<encuestas.length;i++){%>
+		<div id="contenido">
+			<div class="row" style="display: flex; align-items: center;"> 
+				<div class="col-md-5">
+					<label style=" font-family: Times-New-Roman;font-size: 22px; margin-left: 80px;"><b>Encuesta <%= encuestas[i].nombre%></b></label>
+				</div>
+				<div class="col-md-5">
+					<label style=" font-family: Times-New-Roman;font-size: 18px; margin-left: 80px;"><b>Feche de Inicio:</b> <%= encuestas[i].fecha_publicacion.toLocaleString().split(",")[0].split(" ")[0]%></label>
+					<label style=" font-family: Times-New-Roman;font-size: 18px; margin-left: 80px;"><b>Feche de Cierre:</b> <%= encuestas[i].fecha_cierre.toLocaleString().split(",")[0].split(" ")[0]%></label>
+				</div>
+				<div class="col-md-2">
+					<button id="" style="background-color:#e20319" class="btn text-white"><a style="color:#ffffff" href="/encuestas/llenar/<%=encuestas[i].id_encuesta%>">Responder</a></button>
+				</div>
+			</div>
+		</div><br><br>
+		<% } %> <br><br>
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+</body>
+</html>

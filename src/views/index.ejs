@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>SWEIS - Inicia sesión</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css"/>
+</head>
+<body style='background-image: url("../images/fondo4.jpg");background-repeat: repeat-x;background-repeat: repeat-y;
+background-size: 100%;'>
+
+  <div class="container" >
+    <div class="col-md-1"></div>
+    <div class="col-md-7">
+    <div class="backbox">
+      <div class="loginMsg">
+      	<img src="images/banner.png" width="285px" height="80px">
+        <div class="textcontent">
+          <p class="title">¿No tienes una cuenta?</p>
+          <p>Regístrate aquí</p>
+          <button class="btn btn-danger mt-1" id="switch1">Soy Encuestado</button>
+        </div>
+      </div>
+      <div class="signupMsg visibility">
+      	<img src="images/banner.png" style="margin-left: 12px;" width="288px" height="80px">
+        <div class="textcontent">
+
+          <p class="title">¿Tienes una cuenta?</p>
+          <p>Inicia sesión para acceder a ella</p>
+          <button class="btn btn-danger mt-1" id="switch2">Soy Administrador</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="frontbox">
+      <div class="login">
+        <h2>Administrador</h2>
+        <div class="inputbox">
+        <form action="/sesionad" method="post">
+        <div class="form-group">
+            <input type="text" name="correo" placeholder="Correo Electrónico">
+        </div>
+        <div class="form-group">
+            <input type="password" name="contrasena" placeholder="Contraseña">
+        </div>
+            
+        </div>
+        <p>¿Olvidaste tu contraseña?</p>
+        <button type="submit" class="btn btn-light mt-1">
+            Iniciar sesión
+        </button>
+    </form>
+      </div>
+
+      <div class="signup hide">
+        <h2>Encuestado</h2>
+        <form action="/sesionen" method="post">
+          <br>
+          <div class="form-group">
+            <input type="text" name="correo" placeholder="Correo Electrónico">
+        </div>
+        <div class="form-group">
+            <input type="password" name="contrasena" placeholder="Contraseña">
+        </div>
+          <p style="color:white">¿Olvidaste tu contraseña?</p>
+          <button type="submit" class="btn btn-light mt-1">
+            Iniciar sesión
+        </button>
+        </form>
+        
+      </div>
+
+    </div>
+    <!-- frontbox -->
+  </div>
+  </div>
+</body>
+
+</html>
+<!-- partial -->
+  <script  src="../../js/script.js"></script>
+
+</body>
+</html>
+

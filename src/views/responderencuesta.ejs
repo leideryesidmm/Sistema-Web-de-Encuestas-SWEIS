@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Encuesta - SWEIS <%= encuesta.nombre %> 
+		</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/inicio.css"/>
+	
+</head>
+<body onload="">
+	<script rel="stylesheet" type="text/javascript" src=""></script>
+
+
+
+	<div  id="banner" class="container-fluid">
+		<div class="row ml-5">
+			<div class="col-md-8 mt-1 text-white text-center">
+				<img src="../../images/logo.png" class="d-block" alt='...' height="70px" width="70px">
+			</div>
+			<div id="fuente" style="display: flex; align-items: center;" class="col-md-4 mt-2 text-white text-right">
+					<a href="/inicio"><button type="button" onclick ="" class="btn text-white" style="font-family:Impact; font-size: 20px;">Catálogo de Encuestas</button></a>
+					<a href="#">
+						<button type="button" class="btn text-white" style="font-family: Impact; font-size: 20px;">Mi cuenta</button>
+						<img src="../../images/micuenta.png" class="align-right" alt='...' height="30px" width="30px">
+					</a>
+							
+			</div>	
+					
+		</div>
+	</div><br> 
+
+
+
+	<form action="/encuestas/enviar" method="post">
+<div id="contenido">
+	<input type="hidden" name="id_encuesta" value="<%=encuesta[0].id_encuesta%>">
+	<input type="hidden" name="cantidad_preguntas" value="<%=preguntas.length%>">
+	<div class="text-center">
+		<b><label  id="center" style="font-family:'Helvetica'; font-weight: bold;margin: 0 auto;font-size: 28px; color:#e20319"><%=encuesta[0].nombre%></label></b><br><br>
+	</div>
+	
+	<label style=" font-family: Times-New-Roman;font-size: 20px; margin-left: 80px; font-weight: bold;">Descripción: </label>
+	<label style=" font-family: Times-New-Roman;font-size: 18px;"><%=encuesta[0].objetivo%></label>
+
+	<div class="row"> 
+		<div class="col-md-4">
+			<label style=" font-family: Times-New-Roman;font-size: 20px; margin-left: 80px; font-weight: bold;">Población: </label>
+			<label style=" font-family: Times-New-Roman;font-size: 18px;"><%=encuesta[0].poblacion%></label>
+		</div>
+		<div class="col-md-4">
+			<label style=" font-family: Times-New-Roman;font-size: 20px; font-weight: bold;">Fecha publicación: </label>
+			<label style=" font-family: Times-New-Roman;font-size: 18px;"><%=encuesta[0].fecha_publicacion.toLocaleString().split(",")[0].split(" ")[0]%></label>	
+		</div>
+		<div class="col-md-4">
+			<label style=" font-family: Times-New-Roman;font-size: 20px; font-weight: bold;">Fecha de cierre: </label>
+			<label style=" font-family: Times-New-Roman;font-size: 18px;"><%=encuesta[0].fecha_cierre.toLocaleString().split(",")[0].split(" ")[0]%></label>
+		</div>
+	</div><br><hr><br>
+	<% for(let i=0;i<preguntas.length;i++){%>
+		<div class="row"> 
+			<div class="col-md-8">
+				<label style=" font-family: Times-New-Roman;font-size: 18px; margin-left: 80px;"><b> Pregunta <%= i+1 %> : </b><%= preguntas[i].descripcion %> </label>
+			</div>
+			<div class="col-md-4">
+				<label style=" font-family: Times-New-Roman;font-size: 20px; font-weight: bold;">Tipo de pregunta: </label>
+				<label style=" font-family: Times-New-Roman;font-size: 18px;"><%=preguntas[i].tipopreg%></label>	
+			</div>
+		</div><div class="row" style="margin-left: 80px;"><ul>
+			<input type="hidden" name="P<%=i%>" value="<%=preguntas[i].id_pregunta%>">
+			<% if(preguntas[i].tipopreg=="Abierta"){ %>
+			<textarea id="<%=preguntas[i].id_pregunta%>" style="margin: 0 auto;" name="P<%=i%>" rows="2" cols="122" required></textarea><br> 
+			<% }else{ %> 
+		 <%for(let o= 0; o<opciones.length;o++){%>
+            
+			<% if(preguntas[i].id_pregunta==opciones[o].id_pregunta){ %>
+                
+
+                <%if(preguntas[i].tipopreg=="Selección única"){%>
+                <label><input type="radio" name="P<%=i%>" id="<%=opciones[o].id_opcion%>" value="<%=opciones[o].id_opcion%>"> <%=opciones[o].opcion%></label><br><% }else{ %> 
+				<%if(preguntas[i].tipopreg=="Selección múltiple"){%>	  
+                <label><input type="checkbox" name="P<%=i%>" id="<%=opciones[o].id_opcion%>" value="<%=opciones[o].id_opcion%>"> <%=opciones[o].opcion%></label><br><% }}%>
+                
+            <% } %>
+		<%} }%> </ul></div><br><hr>
+	<%} %> 
+	<div class="text-right mr-5">
+		<button style="background-color:#e20319;" type="submit" class="btn mu-5 text-white">Enviar</button>
+		
+	</div></form>
+</div><br><br>
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+</body>
+</html>
