@@ -19,18 +19,23 @@ controller.save = (req, res) => {
     const data = req.body;
     let correos=data.correos.split(",");
     let tamanio=correos.length
-    console.log(correos)
     req.getConnection((err, conn) => {
         conn.query('INSERT INTO poblacion (nombre,tamanio) values ("'+data.nombre+'",'+tamanio+')', (err, rows) =>{
             conn.query('SELECT id_poblacion FROM poblacion WHERE nombre="'+data.nombre+'"', (err, id) =>{
-                console.log(id[0].id_poblacion)
                 for(let i=0;i<correos.length;++i){
-                    conn.query('INSERT INTO encuestado (correo_electronico) values ("'+correos[i]+'")', [data], (err, rows) =>{
+                    var contra=generarContraseña(correos[i]);
+                    conn.query('INSERT INTO encuestado (correo_electronico,contrasena) values ("'+correos[i]+'","'+contra+'")', [data], (err, rows) =>{
                     })
-                    conn.query('INSERT INTO encuestado_poblacion (encuestado,id_poblacion) values ("'+correos[i]+'",'+id[0].id_poblacion+')', [data], (err, rows) =>{
-                        if (err) {
-                            res.json(err);}
+                    conn.query('SELECT * FROM encuestado_poblacion', (err, respuesta) =>{
+                        if(!estaEncuestado(correos[i], id[0].id_poblacion, respuesta)){
+                            console.log(estaEncuestado(correos[i], id[0].id_poblacion, respuesta))
+                            conn.query('INSERT INTO encuestado_poblacion (encuestado,id_poblacion) values ("'+correos[i]+'",'+id[0].id_poblacion+')', [data], (err, rows) =>{
+                                if (err) {
+                                    res.json(err);}
+                            })
+                        }
                     })
+                    
                 }
                 
 
@@ -43,15 +48,32 @@ controller.save = (req, res) => {
     })
 }
 
+function generarContraseña(correo){
+    const caracteres=4;
+    let contrasenia = ""
+    for(let i=0;i<caracteres;i++){
+        contrasenia+=correo[Math.floor(Math.random()*correo.length)]+Math.floor(Math.random()*9)
+    }
+    return contrasenia;
+}
+
+function estaEncuestado(correo, poblacion, correos){
+    let esta=false
+    for(let i=0;i<correos.length;i++){
+        if(correos[i].encuestado==correo&&correos[i].id_poblacion==poblacion){
+            esta=true
+        }
+    }
+    return esta
+}
+
 controller.edit = (req, res) => {
     const data = req.body;
     let correos=data.correos.split(",");
     let tamanio=correos.length
-    console.log(data)
     req.getConnection((err, conn) => {
         conn.query('DELETE FROM encuestado_poblacion WHERE id_poblacion = ?',data.id, (err, rows) =>{
             conn.query('SELECT id_poblacion FROM poblacion WHERE nombre="'+data.nombre+'"', (err, id) =>{
-                console.log(id[0].id_poblacion)
                 for(let i=0;i<correos.length;++i){
                     conn.query('INSERT INTO encuestado (correo_electronico) values ("'+correos[i]+'")', [data], (err, rows) =>{
                     })
@@ -85,9 +107,6 @@ controller.ini =  (req, res) => {
                         data,
                         administrador:rows
                     })
-                
-                //console.log(rows);
-                
             }
         })
     })
@@ -95,7 +114,6 @@ controller.ini =  (req, res) => {
 
 controller.verificar = (req, res) => {
     const data = req.body;
-    //console.log(data);
     req.getConnection((err, conn) => {
         conn.query('SELECT * FROM administrador', (err, rows) =>{
             

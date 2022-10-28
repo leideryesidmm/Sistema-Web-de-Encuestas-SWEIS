@@ -55,6 +55,8 @@
 			<label style=" font-family: Times-New-Roman;font-size: 20px; font-weight: bold;">Fecha publicación: </label>
 			<label style=" font-family: Times-New-Roman;font-size: 18px;"><%=encuesta[0].fecha_publicacion.toLocaleString().split(",")[0].split(" ")[0]%></label>	
 		</div>
+		<%const fecha = new Date();%>
+		<input type="hidden" id="fecha1" name="fecha_hoy" value="">
 		<div class="col-md-4">
 			<label style=" font-family: Times-New-Roman;font-size: 20px; font-weight: bold;">Fecha de cierre: </label>
 			<label style=" font-family: Times-New-Roman;font-size: 18px;"><%=encuesta[0].fecha_cierre.toLocaleString().split(",")[0].split(" ")[0]%></label>
@@ -70,22 +72,30 @@
 				<label style=" font-family: Times-New-Roman;font-size: 18px;"><%=preguntas[i].tipopreg%></label>	
 			</div>
 		</div><div class="row" style="margin-left: 80px;"><ul>
-			<input type="hidden" name="P<%=i%>" value="<%=preguntas[i].id_pregunta%>">
+			<%if(preguntas[i].tipopreg=="Selección única"||preguntas[i].tipopreg=="Abierta"){%>
+			<input type="hidden" name="P" value="<%=preguntas[i].id_pregunta%>">
+			<input type="hidden" name="P" value="<%=preguntas[i].tipopreg%>">
+			<% } %> 
 			<% if(preguntas[i].tipopreg=="Abierta"){ %>
-			<textarea id="<%=preguntas[i].id_pregunta%>" style="margin: 0 auto;" name="P<%=i%>" rows="2" cols="122" required></textarea><br> 
-			<% }else{ %> 
+			<textarea id="<%=preguntas[i].id_pregunta%>" style="margin: 0 auto;" name="O" rows="2" cols="122" required></textarea><br> 
+			<input type="hidden" name="P" value="<%=0%>">
+			<% }else{let cont=0; %>
 		 <%for(let o= 0; o<opciones.length;o++){%>
             
 			<% if(preguntas[i].id_pregunta==opciones[o].id_pregunta){ %>
-                
+                <% cont++; %> 
 
                 <%if(preguntas[i].tipopreg=="Selección única"){%>
-                <label><input type="radio" name="P<%=i%>" id="<%=opciones[o].id_opcion%>" value="<%=opciones[o].id_opcion%>"> <%=opciones[o].opcion%></label><br><% }else{ %> 
+                <label><input type="radio" name="O" id="<%=opciones[o].id_opcion%>" value="<%=opciones[o].id_opcion%>" required> <%=opciones[o].opcion%></label><br><% }else{ %> 
 				<%if(preguntas[i].tipopreg=="Selección múltiple"){%>	  
-                <label><input type="checkbox" name="P<%=i%>" id="<%=opciones[o].id_opcion%>" value="<%=opciones[o].id_opcion%>"> <%=opciones[o].opcion%></label><br><% }}%>
+                <label><input type="checkbox" name="M" id="<%=opciones[o].id_opcion%>" value="<%=opciones[o].id_opcion%>"> <%=opciones[o].opcion%></label><br><% }}%>
                 
             <% } %>
-		<%} }%> </ul></div><br><hr>
+		<%} %>
+		<%if(preguntas[i].tipopreg=="Selección única"){%>
+		<input type="hidden" name="P" value="<%=cont%>">
+		<% } %> 
+	<%}%> </ul></div><br><hr>
 	<%} %> 
 	<div class="text-right mr-5">
 		<button style="background-color:#e20319;" type="submit" class="btn mu-5 text-white">Enviar</button>
@@ -93,6 +103,19 @@
 	</div></form>
 </div><br><br>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+$( document ).ready(function() {
+
+    var now = new Date();
+
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+    var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+    $("#fecha1").val(today);
+});
+</script>
 
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

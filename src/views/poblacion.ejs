@@ -35,8 +35,6 @@
 </div>
 <div>
 	<div class="row ml-5 mr-5" style="text-align:center;">
-		<% console.log(poblaciones) %>
-		<% console.log(encuestados) %>  
 
 		<%for(let i=0;i<poblaciones.length;++i){%>
 		<div class="card" style="width: 31%; text-align:center; margin-left: 25px;">
@@ -52,7 +50,6 @@
 			<%}correos = correos.substr(0, correos.length - 1)%>
 			<%correos+="'"%>
 			<% var nombre="'"+poblaciones[i].nombre+"'" %>  
-			<% console.log(correos) %>
 			<button onclick="editarpoblacion(<%=correos%>,<%=nombre%>,<%=poblaciones[i].id_poblacion%>)" style="background-color:#e20319" type="submit" class="btn text-white">Editar</button>
 		  </div>
 		</div><%}%>

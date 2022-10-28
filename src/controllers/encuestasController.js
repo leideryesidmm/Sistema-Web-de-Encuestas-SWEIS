@@ -146,16 +146,44 @@ controllerEncuestas.llenar =  (req, res) => {
 
 controllerEncuestas.enviar =  (req, res) => {
     const data = req.body
-
     console.log(data)
     req.getConnection((error, conn) =>{
-        conn.query('SELECT e.id_encuesta,e.nombre,e.fecha_cierre,e.fecha_creación,e.fecha_publicacion,e.objetivo,p.nombre as "poblacion" FROM encuesta e join poblacion p on p.id_poblacion=e.población where id_encuesta=?',[id], (err, rows) =>{
-            
+        conn.query('INSERT INTO encuesta_contestada (fecha_contestada,id_encuesta,encuestado) values ("'+data.fecha_hoy+'","'+data.id_encuesta+'","miltonjesusvc@ufps.edu.co")', (err, rows) =>{
+            conn.query('SELECT id_resp_enc FROM encuesta_contestada WHERE id_encuesta='+data.id_encuesta+' AND '+'encuestado="miltonjesusvc@ufps.edu.co"', (error, id) =>{
+                let x=0;
+                for(let i=0;i<data.P.length;i=i+3){
+                    
+                    conn.query('INSERT INTO pregunta_contestada (resp_enc,id_pregunta) values ("'+id[0].id_resp_enc+'","'+data.P[i]+'")', (err, rows) =>{
+                        
+                        conn.query('SELECT id_pregunta_contestada FROM pregunta_contestada WHERE resp_enc='+id[0].id_resp_enc+' AND id_pregunta='+data.P[i], (error, id2) =>{
+                            if (err) 
+                            res.json(err);
+                                
+                                if(data.P[i+1]=='Abierta'){
+                                    conn.query('INSERT INTO opcion_respuesta (pregunta_contestada,descripcion_Abierta) values ("'+id2[0].id_pregunta_contestada+'","'+data.O[x]+'")', (err, rows) =>{
+                                    })
+                                    x=x+1;
+                                    }else{
+                                    conn.query('INSERT INTO opcion_respuesta (pregunta_contestada,id_opcion) values ("'+id2[0].id_pregunta_contestada+'","'+data.O[x]+'")', (err, rows) =>{
+                                        
+                                    })
+                                    x=x+1;
+                                }
+                            
+                        })
+                    })
+                    
+                }
+            })
         })
     })
 
 };
 
+function crear(){
+    const formulario = new URLSearchParams('')
+    return formulario.get('');
+}
 
 module.exports = controllerEncuestas;
 ` for(let o=0;o<data.i.length;++o){

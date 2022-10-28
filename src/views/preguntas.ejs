@@ -8,7 +8,6 @@
 
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"/>
 	<link rel="stylesheet" type="text/css" href="../css/index.css"/>
-	
 </head>
 <body onload="">
 	<script rel="stylesheet" type="text/javascript" src="../../js/encuesta.js"></script>
@@ -48,7 +47,7 @@
 		<br>
 			<div id="contenido2">
 			<br><label id="texto">Fecha Inicio: </label>
-			<input required  type="date" name="fecha_ini">
+			<input required id="fecha1" type="date" name="fecha_ini" min="">
 			</div> 
 			<input type="hidden" id="json" name="json" value="x">
 			<%const fecha = new Date();%>
@@ -57,7 +56,7 @@
 		<br>
 			<div id="contenido2">
 				<label id="texto">Fecha Finalización: </label>
-				<input required type="date" name="fecha_fin">
+				<input required id="fecha2" type="date" name="fecha_fin" min="">
 			</div>   	
 			<br>
 		</div>
@@ -72,7 +71,7 @@
 				<% for (let i=0; i< tipos.length ; ++i) {%>
 					<option value="<%=tipos[i].id_tipo_pregunta%>"><%=tipos[i].descripcion%></option>
 				<%}%>
-			</select>
+			</select> 
 			</div>
 			<button class="btn btn-danger" style="background-color: #e20319 ;" onclick="agregarpregunta()" type="button">Agregar Pregunta</button>
 		</div>
@@ -96,6 +95,8 @@ $( document ).ready(function() {
 
     var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
     $("#fecha").val(today);
+	$("#fecha1").attr("min", today);
+	$("#fecha2").attr("min", today);
 });
 </script>
     </body>	
