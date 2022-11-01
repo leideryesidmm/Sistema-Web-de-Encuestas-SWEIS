@@ -10,5 +10,4 @@ router.post('/edit/:id', encuestasController.edit)
 router.get('/ver/:id', encuestasController.ver)
 router.get('/llenar/:id', encuestasController.llenar)
 router.post('/enviar', encuestasController.enviar)
-
 module.exports = router;

@@ -1,5 +1,7 @@
 const controller = {};
 
+const bcrypt = require('bcryptjs');
+
 controller.list =  (req, res) => {
     req.getConnection((error, conn) =>{
         
@@ -8,7 +10,8 @@ controller.list =  (req, res) => {
                 
                 res.render('poblacion', {
                     poblaciones:po,
-                    encuestados: en
+                    encuestados: en,
+                    menssage:null
                 })
         })
     })
@@ -23,7 +26,8 @@ controller.save = (req, res) => {
         conn.query('INSERT INTO poblacion (nombre,tamanio) values ("'+data.nombre+'",'+tamanio+')', (err, rows) =>{
             conn.query('SELECT id_poblacion FROM poblacion WHERE nombre="'+data.nombre+'"', (err, id) =>{
                 for(let i=0;i<correos.length;++i){
-                    var contra=generarContraseña(correos[i]);
+                    //var contra=encriptar(generarContraseña(correos[i]));
+                    var contra=encriptar('contraseña');
                     conn.query('INSERT INTO encuestado (correo_electronico,contrasena) values ("'+correos[i]+'","'+contra+'")', [data], (err, rows) =>{
                     })
                     conn.query('SELECT * FROM encuestado_poblacion', (err, respuesta) =>{
@@ -42,7 +46,18 @@ controller.save = (req, res) => {
 
                 if (err) {
                     res.json(err);}
-                  else{res.redirect('/poblacion');}
+                  else{
+                    conn.query('SELECT * FROM poblacion', (err, po) =>{
+                        conn.query('SELECT * FROM poblacion p join encuestado_poblacion ep on p.id_poblacion=ep.id_poblacion', (err, en) =>{
+                            req.flash('info','Se ha registrado correctamente la poblacion '+data.nombre)
+                    res.render('poblacion',{
+                        menssage: req.flash('info'),
+                        poblaciones:po,
+                                encuestados: en
+                    });
+                    })
+                })
+                    }
             })
         })
     })
@@ -55,6 +70,11 @@ function generarContraseña(correo){
         contrasenia+=correo[Math.floor(Math.random()*correo.length)]+Math.floor(Math.random()*9)
     }
     return contrasenia;
+}
+function encriptar(contrasenia){
+    var salt=bcrypt.genSaltSync(12);
+    var password=bcrypt.hashSync(contrasenia,salt)
+    return password;
 }
 
 function estaEncuestado(correo, poblacion, correos){

@@ -4,6 +4,12 @@ const morgan = require('morgan');
 const mysql = require('mysql');
 const myConnection = require('express-myconnection');
 const app = express();
+const flash = require('connect-flash');
+const session = require('express-session');
+const cookieParser=require('cookie-parser');
+const passport=require('passport');
+
+require('./passport/passport')(passport);
 
 // Importing routes
 const loginRoutes = require('./routes/login');
@@ -28,14 +34,21 @@ app.use(myConnection(mysql, {
     database: 'sweis'
 }, 'single'))
 app.use(express.urlencoded({extended: false}));
-
+app.use(cookieParser());
+app.use(session({
+    secret:'lyjymslm3x100pre',
+    resave: false,
+    saveUninitialized:false
+}));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 // Routes
 app.use('/', loginRoutes);
 app.use('/encuestas', encuestasRoutes);
 app.use('/poblacion', poblacionRoutes);
 app.use('/inicio', inicioRoutes);
 app.use('/encuestas-por-llenar', encasigRoutes);
-
 
 // Static Files
 app.use(express.static(path.join(__dirname, 'public')))

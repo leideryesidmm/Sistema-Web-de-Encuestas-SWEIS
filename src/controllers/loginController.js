@@ -1,5 +1,7 @@
 const controller = {};
 
+
+
 controller.mostrar =  (req, res) => {
     req.getConnection((error, conn) =>{
         conn.query('', (err, rows) =>{
@@ -8,6 +10,7 @@ controller.mostrar =  (req, res) => {
         })
     })
 };
+
 
 controller.se =  (req, res) => {
     const data = req.body;
@@ -36,14 +39,19 @@ controller.se =  (req, res) => {
 
 
 controller.se2 =  (req, res) => {
+    var autenticado=req.isAuthenticated()
+    if(autenticado){
+        
+    var email=req.user.email
+    console.log(email)
     const data = req.body;
     var paso=false;
     req.getConnection((error, conn) =>{
     conn.query('Select * from encuestado', (err, resul) =>{
         for(let c =0; c<resul.length;c++){
-            if(data.correo.toString()==resul[c].correo_electronico&&data.contrasena.toString()==resul[c].contrasena){
+            //if(data.correo.toString()==resul[c].correo_electronico&&data.contrasena.toString()==resul[c].contrasena){
             paso=true;
-                conn.query('SELECT ep.id_poblacion FROM encuestado e join encuestado_poblacion ep on e.correo_electronico=ep.encuestado where e.correo_electronico="'+data.correo+'"', (err, rows) =>{
+                conn.query('SELECT ep.id_poblacion FROM encuestado e join encuestado_poblacion ep on e.correo_electronico=ep.encuestado where e.correo_electronico="'+email+'"', (err, rows) =>{
                         var s='';
                         console.log(rows)
                     for(let i =0; i<rows.length;i++){
@@ -61,7 +69,8 @@ controller.se2 =  (req, res) => {
                         } else {
                                 res.render('encuestasasignadas', {
                                     encuestas: enc,
-                                    correo:data.correo.toString()
+                                    correo:email,
+                                    autenticado:autenticado
                                 })
                                
                         } 
@@ -71,17 +80,19 @@ controller.se2 =  (req, res) => {
                     
                 })
                 break;
-          }else{
-          if(c+1==resul.length){
-            res.render('index', {
-            })
-          }}
+  //        }else{
+    //      if(c+1==resul.length){
+        //    res.render('index', {
+      //      })
+      //    }}
 
         }
         
         
         })
-    });
+    });}else{
+        res.redirect('/')
+    }
 };
 
 controller.ini =  (req, res) => {
