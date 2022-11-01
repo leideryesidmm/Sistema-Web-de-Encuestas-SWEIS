@@ -1,20 +1,28 @@
-const controller = {};
-controller.ini =  (req, res) => {
+var autenticado=req.isAuthenticated()
+    if(autenticado){
 
-    req.getConnection((error, conn) =>{
-        conn.query('SELECT * FROM encuesta', (err, rows) =>{
-            if (err) {
-                res.json(err);
-            } else {
-                
-                    res.render('inicio', {
-                        encuestas:rows
-                    })
-                
-                //console.log(rows);
-                
-            }
-        })
-    })
-};
-module.exports = controller;
+        const controller = {};
+        controller.ini =  (req, res) => {
+        
+            req.getConnection((error, conn) =>{
+                conn.query('SELECT * FROM encuesta', (err, rows) =>{
+                    if (err) {
+                        res.json(err);
+                    } else {
+                        
+                        
+                            res.render('inicio', {
+                                encuestas:rows
+                            })
+                        
+                        //console.log(rows);
+                        
+                    }
+                })
+            })
+        };
+        module.exports = controller;
+
+}else{
+        res.redirect('/')
+}
