@@ -31,7 +31,7 @@ controllerEncuestas.edit = (req, res) => {
     })
 }
     
-}
+
 
 controllerEncuestas.pub = (req, res) => {
     var indice=0;
@@ -89,7 +89,7 @@ controllerEncuestas.pub = (req, res) => {
     })
 }
     
-}
+
 
 controllerEncuestas.ver =  (req, res) => {
 
