@@ -3,45 +3,68 @@ const controller = {};
 
 
 controller.mostrar =  (req, res) => {
-    req.getConnection((error, conn) =>{
-        conn.query('', (err, rows) =>{
-                res.render('index', {
-                })
+  //  var autenticado=req.isAuthenticated()
+    //if(autenticado){
+        req.getConnection((error, conn) =>{
+            conn.query('', (err, rows) =>{
+                    res.render('index', {
+                    })
+            })
         })
-    })
+//}else{
+  //      res.redirect('/')
+//}
+    
 };
 
 
 controller.se =  (req, res) => {
-    const data = req.body;
-    req.getConnection((error, conn) =>{
-        conn.query('Select * from administrador', (err, rows) =>{
-
-            if(data.correo.toString()==rows[0].correo&&data.contrasena.toString()==rows[0].contrasena){
-                conn.query('SELECT * FROM encuesta', (err, rows) =>{
-                    if (err) {
-                        res.json(err);
-                    } else {
-                        res.render('inicio', {
-                            encuestas:rows
-                        })
-                        
-                    }
-                })
-            }else{
-                res.render('index', {
-                })
-            }
-                
+    console.log("pasa")
+    var autenticado=req.isAuthenticated()
+    if(autenticado){
+        var type=req.user.type;
+        if(type==1){
+//            const data = req.body;
+        req.getConnection((error, conn) =>{
+//            conn.query('Select * from administrador', (err, rows) =>{
+    
+//            if(data.correo.toString()==rows[0].correo&&data.contrasena.toString()==rows[0].contrasena4){
+                    conn.query('SELECT * FROM encuesta', (err, rows) =>{
+                        if (err) {
+                            res.json(err);
+                        } else {
+                            res.render('inicio', {
+                                encuestas:rows,
+                                email: req.user.email
+                            })
+                            
+                        }
+                    })
+//                }else{
+//                  res.render('index', {
+//                   })
+//                }
+                    
+//            })
         })
-    })
+        }else{
+            res.render('index', {
+            })
+        }
+        
+}else{
+        res.redirect('/')
+}
+    
 };
 
 
 controller.se2 =  (req, res) => {
     var autenticado=req.isAuthenticated()
-    if(autenticado){
-        
+    var type=req.user.type;
+
+    if(autenticado&&type==0){
+
     var email=req.user.email
     console.log(email)
     const data = req.body;
@@ -62,7 +85,7 @@ controller.se2 =  (req, res) => {
                         }
                     }
                     console.log(s)
-                    conn.query('SELECT * FROM encuesta where población='+s, (err, enc) =>{
+                    conn.query('SELECT * from encuesta e where e.población='+s+'&&id_encuesta not in (SELECT id_encuesta from encuesta_contestada where encuestado="'+email+'")', (err, enc) =>{
                         
                         if (err) {
                             res.json(err);
@@ -96,21 +119,27 @@ controller.se2 =  (req, res) => {
 };
 
 controller.ini =  (req, res) => {
-    const data = req.body;
-    req.getConnection((error, conn) =>{
-        conn.query('SELECT * FROM encuesta', (err, rows) =>{
-            if (err) {
-                res.json(err);
-            } else {
-                
-                    res.render('inicio', {
-                        encuestas:rows
-                    })
-                
-                
-            }
+    var autenticado=req.isAuthenticated()
+    if(autenticado){
+        const data = req.body;
+        req.getConnection((error, conn) =>{
+            conn.query('SELECT * FROM encuesta', (err, rows) =>{
+                if (err) {
+                    res.json(err);
+                } else {
+                    
+                        res.render('inicio', {
+                            encuestas:rows
+                        })
+                    
+                    
+                }
+            })
         })
-    })
+}else{
+        res.redirect('/')
+}
+    
 };
 
 controller.verificar = (req, res) => {
@@ -124,34 +153,52 @@ controller.verificar = (req, res) => {
 }
 
 controller.edit = (req, res) =>{
-    const {id} = req.params;
-    req.getConnection((err, conn) =>{
-        conn.query('SELECT * FROM usuario WHERE id_Usuario = ?', [id], (err, rows) =>{
-            
-            res.render('users_edit', {
-                data: rows[0]
+    var autenticado=req.isAuthenticated()
+    if(autenticado){
+        const {id} = req.params;
+        req.getConnection((err, conn) =>{
+            conn.query('SELECT * FROM usuario WHERE id_Usuario = ?', [id], (err, rows) =>{
+                
+                res.render('users_edit', {
+                    data: rows[0]
+                });
             });
         });
-    });
+}else{
+        res.redirect('/')
+}
+    
 }
 
 controller.update = (req, res) =>{
-    const {id} = req.params;
-    const newData = req.body;
-    req.getConnection((err, conn) =>{
-        conn.query('UPDATE usuario set ? WHERE id_Usuario = ?', [newData, id], (err, rows) =>{
-            res.redirect('/');
-        })
-    });
+    var autenticado=req.isAuthenticated()
+    if(autenticado){
+        const {id} = req.params;
+        const newData = req.body;
+        req.getConnection((err, conn) =>{
+            conn.query('UPDATE usuario set ? WHERE id_Usuario = ?', [newData, id], (err, rows) =>{
+                res.redirect('/');
+            })
+        });
+}else{
+        res.redirect('/')
+}
+   
 }
 
 controller.delete = (req, res) => {
-    req.getConnection((err, conn) => {
-        const {id} = req.params;
-        conn.query('DELETE FROM usuario WHERE id_Usuario = ?', [id], (err, rows) =>{
-            res.redirect('/');
+    var autenticado=req.isAuthenticated()
+    if(autenticado){
+        req.getConnection((err, conn) => {
+            const {id} = req.params;
+            conn.query('DELETE FROM usuario WHERE id_Usuario = ?', [id], (err, rows) =>{
+                res.redirect('/');
+            })
         })
-    })
+}else{
+        res.redirect('/')
+}
+    
 }
 
 module.exports = controller;

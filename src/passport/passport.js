@@ -24,12 +24,14 @@ module.exports = function(passport){
         bd.query('SELECT * FROM encuestado WHERE correo_electronico= ?', email,function(err, rows,fields){
             if(err) throw err;
             bd.end();
-
+            
             if(rows.length>0){
                 var user =rows[0]
+                console.log(bcrypt.compareSync(password,user.contrasena))
                 if(bcrypt.compareSync(password,user.contrasena)){
                     return done(null,{
-                        email:user.correo_electronico
+                        email:user.correo_electronico,
+                        type:user.Rol
                     });
                 }
                 return done(null,false,req.flash('auth','Email o Password incorrectos'))

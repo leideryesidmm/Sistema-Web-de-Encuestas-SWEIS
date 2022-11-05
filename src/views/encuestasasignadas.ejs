@@ -9,21 +9,22 @@
 	<link rel="stylesheet" type="text/css" href="../css/inicio.css"/>
 	
 </head>
-<body onload="">
+<body style='background-image: url("../images/fondo3.jpg");background-repeat: repeat-x;background-repeat: repeat-y;
+background-size: 100%;'>
 	<script rel="stylesheet" type="text/javascript" src=""></script>
 
 
-	<% if(autenticado){ %>
+	
 <div  id="banner" class="container-fluid">
 	<div class="row ml-5">
 		<div class="col-md-8 mt-1 text-white text-center">
-			<img src="../images/logo.png" class="d-block" alt='...' height="70px" width="70px">
+			<a href="https://ingsistemas.cloud.ufps.edu.co/"><img src="../images/logo.png" class="d-block" alt='...' height="70px" width="70px"></a>
 		</div>
 		<div id="fuente" style="display: flex; align-items: center;" class="col-md-4 mt-2 text-white text-right">
-				<a href="/inicio"><button type="button" onclick ="" class="btn text-white" style="font-family:Impact; font-size: 20px;">Catálogo de Encuestas</button></a>
+				<a href="/sesionen2"><button type="button" onclick ="" class="btn text-white" style="font-family:Gill Sans; font-size: 20px;">Encuestas</button></a>
 				<a href="#">
-					<button type="button" class="btn text-white" style="font-family: Impact; font-size: 20px;"><%= correo %></button>
-					<img src="../../images/micuenta.png" class="align-right" alt='...' height="30px" width="30px">
+					<button type="button" class="btn text-white" style="font-family: Gill Sans; font-size: 20px;"><%= correo.split('@')[0] %></button>
+					
 				</a>
 						
 		</div>	
@@ -33,7 +34,12 @@
 
 
 <div style="font-size: 40px">
+	<% if(encuestas.length==0){ %>
+		<br><br>
+		<div style="border: 1px solid #b81919;" align="center"><H1>No tiene encuestas Pendientes</H1></Div> 
+			<% } else{%> 
 	<h2 align="center">Encuestas Asignadas</h2>
+	<% } %> 
 </div>
 
 	<%for(let i=0; i<encuestas.length;i++){%>
@@ -51,7 +57,7 @@
 				</div>
 			</div>
 		</div><br><br>
-		<% }} %> <br><br>
+		<% } %> <br><br>
 
 
 

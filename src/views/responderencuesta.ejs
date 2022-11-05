@@ -11,27 +11,26 @@
 	<link rel="stylesheet" type="text/css" href="../../css/inicio.css"/>
 	
 </head>
-<body onload="">
+<body style='background-image: url("../images/fondo3.jpg");background-repeat: repeat-x;background-repeat: repeat-y;
+background-size: 100%;'>
 	<script rel="stylesheet" type="text/javascript" src=""></script>
 
 
 
 	<div  id="banner" class="container-fluid">
-		<div class="row ml-5">
-			<div class="col-md-8 mt-1 text-white text-center">
+		<div class="row ml-5 ">
+			<div class="col-md-7 mt-1 text-white text-center">
 				<img src="../../images/logo.png" class="d-block" alt='...' height="70px" width="70px">
 			</div>
-			<div id="fuente" style="display: flex; align-items: center;" class="col-md-4 mt-2 text-white text-right">
-					<a href="/inicio"><button type="button" onclick ="" class="btn text-white" style="font-family:Impact; font-size: 20px;">Catálogo de Encuestas</button></a>
-					<a href="#">
-						<button type="button" class="btn text-white" style="font-family: Impact; font-size: 20px;">Mi cuenta</button>
-						<img src="../../images/micuenta.png" class="align-right" alt='...' height="30px" width="30px">
-					</a>
-							
-			</div>	
+			<div id="fuente" class="col-md-5 text-white text-center"><br>
+				<a href="/sesionen2"><button type="button" onclick ="" class="btn text-white" style="font-family:Gill Sans; font-size: 20px;">Encuestas</button></a>
+				<button type="button" class="btn text-white" style="font-family: Gill Sans; font-size: 20px;"><%= correo.split('@')[0] %></button>
+				
+			</div>
+
 					
 		</div>
-	</div><br> 
+	</div><br>
 
 
 
