@@ -101,5 +101,16 @@ $( document ).ready(function() {
 	$("#fecha2").attr("min", today);
 });
 </script>
-    </body>	
+<script>
+
+	$(document).ready(function () {
+		$('#fecha1').change(function () {
+			extraer = $('#fecha1').val();
+
+			$('#fecha2').attr("min",extraer);
+		});
+	});
+
+</script>
+    </body>
 </html>

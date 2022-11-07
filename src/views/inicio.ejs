@@ -56,7 +56,7 @@ background-size: 100%;'>
 					  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 					    <button onclick="eliminar(<%= encuestas[i].id_encuesta %>)"><a class="dropdown-item" data-toggle="modal" href="#elimencuesta">Eliminar</a></button>
 					    <button onclick="editarFechaCierre(<%= encuestas[i].id_encuesta %>)"><a class="dropdown-item" data-toggle="modal" href="#editarfecha">Editar fecha</a></button>
-					    <a class="dropdown-item" href="#">Ver respuestas</a>
+					    <a class="dropdown-item" href="encuestas/respuestas/<%=encuestas[i].id_encuesta %> ">Ver respuestas</a>
 					    <a class="dropdown-item" href="#">Estadísticas</a>
 					  </div>
 					</div>

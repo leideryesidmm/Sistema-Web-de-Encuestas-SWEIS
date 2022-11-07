@@ -1,6 +1,9 @@
 const controllerEncuestas = {};
+var transport = require('../email/mailer.js');
 
-controllerEncuestas.add = (req, res) => {          
+controllerEncuestas.add = (req, res) => {
+    var autenticado=req.isAuthenticated()
+    if(autenticado){          
     req.getConnection((err, conn) =>{  
         conn.query("SELECT * FROM tipo_pregunta", (err, rows) =>{
             conn.query('SELECT * FROM poblacion',(err,po) =>{
@@ -11,17 +14,25 @@ controllerEncuestas.add = (req, res) => {
             })
             
         });    
-    });
+    });}else{
+        res.redirect('/')
+}
 }
 controllerEncuestas.elim = (req, res) => {
+    var autenticado=req.isAuthenticated()
+    if(autenticado){ 
     req.getConnection((err, conn) => {
         const {id} = req.params;
         conn.query('DELETE FROM encuesta WHERE id_encuesta = ?', [id], (err, rows) =>{
             res.redirect('/inicio');
         })
-    })
+    })}else{
+        res.redirect('/')
+}
 }
 controllerEncuestas.edit = (req, res) => {
+    var autenticado=req.isAuthenticated()
+    if(autenticado){ 
     req.getConnection((err, conn) => {
         const {id} = req.params;
         const newData = req.body;
@@ -29,11 +40,16 @@ controllerEncuestas.edit = (req, res) => {
             res.redirect('/inicio');
         })
     })
+}else{
+    res.redirect('/')
+}
 }
     
 
 
 controllerEncuestas.pub = (req, res) => {
+    var autenticado=req.isAuthenticated()
+    if(autenticado){ 
     var indice=0;
     const data = req.body;
     req.getConnection((err, conn) => {
@@ -85,13 +101,40 @@ controllerEncuestas.pub = (req, res) => {
                 
             
         
-        conn.query('SELECT * PREGUNTAS', (errO, rows) =>{})
+        conn.query('SELECT * from encuestado_poblacion where id_poblacion='+ data.poblacion, (errO, rows) =>{
+            try {
+                for (let i = 0; i < rows.length; i++) {
+                    generarinfocorreos(rows[i].encuestado);
+                }
+            } catch (error) {
+                console.log(errO)
+            }
+            
+        })
     })
+}else{
+    res.redirect('/')
+}
+}
+
+async function generarinfocorreos(correo){
+
+    var info=await transport.sendMail({
+        from: '"SWEIS UFPS 📝📈📋" <sweisufps@gmail.com>', // sender address
+        to: correo, // list of receivers
+        subject: "Encuesta por responder", // Subject line
+        text: "Hola, tu correo ha sido registrado al Sistema Web de Encuesta de Ingenieria de Sistemas - SWEIS, ingresa con las siguientes credenciales para verificar si tienes encuestas por llenar: \n correo: ", // plain text body
+        html: "<img src='https://i.ibb.co/bQKsXBX/banner.png' alt='logo'><p>Hola, tienes una encuesta pendiente en Sistema Web de Encuesta de Ingenieria de Sistemas <b>- SWEIS UFPS</b> </p> <p><a href='http://localhost:3000/'>Ingresa aquí</a>  para llenarla</p>" // html body
+      });
+      console.log(info)
+    //leideryesidmm@ufps.edu.co,jheyneralexanderld@ufps.edu.co,matildealexandraal@ufps.edu.co
 }
     
 
 
 controllerEncuestas.ver =  (req, res) => {
+    var autenticado=req.isAuthenticated()
+    if(autenticado){ 
 
     req.getConnection((error, conn) =>{
         const {id} = req.params;
@@ -112,10 +155,14 @@ controllerEncuestas.ver =  (req, res) => {
         })})
         })
     })
+}else{
+    res.redirect('/')
+}
 };
 
 controllerEncuestas.llenar =  (req, res) => {
-
+    var autenticado=req.isAuthenticated()
+    if(autenticado){ 
     req.getConnection((error, conn) =>{
         const {id} = req.params;
         conn.query('SELECT e.id_encuesta,e.nombre,e.fecha_cierre,e.fecha_creación,e.fecha_publicacion,e.objetivo,p.nombre as "poblacion" FROM encuesta e join poblacion p on p.id_poblacion=e.población where id_encuesta=?',[id], (err, rows) =>{
@@ -129,20 +176,27 @@ controllerEncuestas.llenar =  (req, res) => {
                     res.render('responderencuesta', {
                         encuesta:rows,
                         preguntas:preg,
-                        opciones:opc
+                        opciones:opc,
+                        correo:req.user.email
                     }) 
                 
             }
         })})
         })
     })
+}else{
+    res.redirect('/')
+}
 };
 
 controllerEncuestas.enviar =  (req, res) => {
+    var autenticado=req.isAuthenticated()
+    if(autenticado){ 
+        let email=req.user.email;
     const data = req.body
     req.getConnection((error, conn) =>{
-        conn.query('INSERT INTO encuesta_contestada (fecha_contestada,id_encuesta,encuestado) values ("'+data.fecha_hoy+'","'+data.id_encuesta+'","miltonjesusvc@ufps.edu.co")', (err, rows) =>{
-            conn.query('SELECT id_resp_enc FROM encuesta_contestada WHERE id_encuesta='+data.id_encuesta+' AND '+'encuestado="miltonjesusvc@ufps.edu.co"', (error, id) =>{
+        conn.query('INSERT INTO encuesta_contestada (fecha_contestada,id_encuesta,encuestado) values ("'+data.fecha_hoy+'","'+data.id_encuesta+'","'+email+'")', (err, rows) =>{
+            conn.query('SELECT id_resp_enc FROM encuesta_contestada WHERE id_encuesta='+data.id_encuesta+' AND '+'encuestado="'+email+'"', (error, id) =>{
                 let x=0;
                 for(let i=0;i<data.P.length;i=i+3){
                     
@@ -168,8 +222,6 @@ controllerEncuestas.enviar =  (req, res) => {
                     
                 }
                 for(let i=1;i<data.M.length;i++){
-                    console.log(data.M)
-                    console.log(i)
                     conn.query('SELECT pregunta FROM opcion WHERE id_opcion='+data.M[i], (error, id4) =>{
                                 conn.query('INSERT INTO pregunta_contestada (resp_enc,id_pregunta,multiple) values ("'+id[0].id_resp_enc+'","'+id4[0].pregunta+'","'+id[0].id_resp_enc+''+id4[0].pregunta+'")', (err, rows) =>{
                                     conn.query('SELECT id_pregunta_contestada FROM pregunta_contestada WHERE resp_enc='+id[0].id_resp_enc+' AND id_pregunta='+id4[0].pregunta, (error, id3) =>{
@@ -185,10 +237,58 @@ controllerEncuestas.enviar =  (req, res) => {
             })
         })
     })
-    res.redirect('/');
+    res.redirect('/sesionen2');
+
+}else{
+    res.redirect('/')
+}
 };
 
+controllerEncuestas.resp = (req, res) => {
+    var autenticado=req.isAuthenticated()
+    if(autenticado){ 
+        req.getConnection((error, conn) =>{
+            const {id} = req.params;
+            conn.query('SELECT * from encuesta_contestada ec join encuesta e on e.id_encuesta=ec.id_encuesta where e.id_encuesta=?',[id], (err, resp) =>{
+                res.render('respuestas',{
+                    respuestas:resp
+                })
+                console.log(resp)
+            })
+        })
+    
+    }else{
+            res.redirect('/')
+        }
 
+}
+
+controllerEncuestas.respenc = (req, res) => {
+    var autenticado=req.isAuthenticated()
+    if(autenticado){ 
+        req.getConnection((error, conn) =>{
+            const {id} = req.params;
+            conn.query('SELECT * from encuesta_contestada ec join encuesta e on e.id_encuesta=ec.id_encuesta where ec.id_resp_enc=?',[id], (err, enc) =>{
+                conn.query('SELECT * from pregunta_contestada pc join pregunta p on p.id_pregunta=pc.id_pregunta where pc.resp_enc=?',[id], (err, preg) =>{
+                    conn.query('SELECT * from pregunta_contestada pc join opcion_respuesta or on pc.id_pregunta_contestada==or.pregunta_contestada join opcion o on o.id_opcion=o.rid_opcion  where pc.id_encuesta=?',[id], (err, opc) =>{
+                        res.render('respuestasencuestado',{
+                            encuesta:enc,
+                            preguntas:preg,
+                            opciones:opc
+
+                        })
+                        console.log(enc)
+                    })
+                })
+                
+            })
+        })
+    
+    }else{
+            res.redirect('/')
+        }
+
+}
 
 
 function crear(){

@@ -1,0 +1,59 @@
+<html>
+	<head>
+	<title>Respuestas - SWEIS
+		</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/inicio.css"/>
+	
+</head>
+<body style='background-image: url("../../images/fondo3.jpg");background-repeat: repeat-x;background-repeat: repeat-y;
+background-size: 100%;'>
+	<script rel="stylesheet" type="text/javascript" src="../../js/poblacion.js"></script>
+
+
+
+	<div  id="banner" class="container-fluid">
+		<div class="row ml-5">
+			<div class="col-md-7 text-white text-center">
+				<a href="https://ingsistemas.cloud.ufps.edu.co/"><img src="../../images/logo.png" class="d-block" alt='...' height="70px" width="70px"></div></a>
+				<div id="fuente" class="col-md-5 text-white text-center"><br>	
+					<a href="/poblacion"><button type="button" onclick ="" class="btn text-white" style="font-family:Gill Sans; font-size: 20px;">Poblaciones</button></a>			
+					<a href="/inicio"><button type="button" onclick ="" class="btn text-white" style="font-family:Gill Sans; font-size: 20px;">Encuestas</button></a>
+						  <a href="#"><button type="button" class="btn text-white" style="font-family: Gill Sans; font-size: 20px;">Mi cuenta</button></a>
+					
+				</div>				
+		</div>
+	</div><br>
+
+<% if(respuestas[0]!=undefined) {%> 
+<div  class="container-fluid"> 
+	<h1 style="color: #e20319; text-align: center;">Respuestas de la encuesta: <%= respuestas[0].nombre %></h1><br>
+</div>
+<div class="text-center">
+	<div class="row ml-5 mr-5" style="text-align:center;">
+
+		<%for(let i=0;i<respuestas.length;++i){%>
+		<div class="card" style="margin-bottom: 1%; background-color: #8885852c; width: 31%; text-align:center; margin-left: 25px;">
+		  <div class="card-body">
+		    <a href="/encuestas/respenc/<%=respuestas[i].id_resp_enc  %> "><h6 class="card-title" name="nombre"><%=respuestas[i].encuestado%></h6></a>
+			<h6 class="card-title" name="nombre">Fecha contestada: <%=respuestas[i].fecha_contestada.toLocaleString().split(",")[0].split(" ")[0]%></h6>
+		  </div>
+		</div><%}%>
+
+
+	</div>
+</div><% } %> 
+<br><br>
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+</body>
+</html>

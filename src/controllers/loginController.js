@@ -5,9 +5,11 @@ const controller = {};
 controller.mostrar =  (req, res) => {
   //  var autenticado=req.isAuthenticated()
     //if(autenticado){
+        
         req.getConnection((error, conn) =>{
             conn.query('', (err, rows) =>{
                     res.render('index', {
+                        Message:req.flash('auth')
                     })
             })
         })
@@ -21,9 +23,15 @@ controller.mostrar =  (req, res) => {
 controller.se =  (req, res) => {
     console.log("pasa")
     var autenticado=req.isAuthenticated()
-    if(autenticado){
+    try {
         var type=req.user.type;
-        if(type==1){
+    } catch (error) {
+        res.redirect('/')
+    }
+    
+    if(autenticado&&type==1){
+       
+        
 //            const data = req.body;
         req.getConnection((error, conn) =>{
 //            conn.query('Select * from administrador', (err, rows) =>{
@@ -47,12 +55,11 @@ controller.se =  (req, res) => {
                     
 //            })
         })
-        }else{
-            res.render('index', {
-            })
-        }
+        
         
 }else{
+        if(autenticado)
+           req.flash('auth','Tipo de usuario incorrecto, ingrese como encuestado')
         res.redirect('/')
 }
     
@@ -61,7 +68,11 @@ controller.se =  (req, res) => {
 
 controller.se2 =  (req, res) => {
     var autenticado=req.isAuthenticated()
-    var type=req.user.type;
+    try {
+        var type=req.user.type;
+    } catch (error) {
+        res.redirect('/')
+    }
 
     if(autenticado&&type==0){
 
@@ -85,7 +96,7 @@ controller.se2 =  (req, res) => {
                         }
                     }
                     console.log(s)
-                    conn.query('SELECT * from encuesta e where e.población='+s+'&&id_encuesta not in (SELECT id_encuesta from encuesta_contestada where encuestado="'+email+'")', (err, enc) =>{
+                    conn.query('Select * from (SELECT * from encuesta where población='+s+') z where z.id_encuesta not in (SELECT ec.id_encuesta as id_encuesta from encuesta_contestada ec where ec.encuestado="'+email+'") and z.id_encuesta in (SELECT id_encuesta from encuesta where fecha_cierre >="'+getFechaHoy()+'"and fecha_publicacion <="'+getFechaHoy()+'")', (err, enc) =>{
                         
                         if (err) {
                             res.json(err);
@@ -114,6 +125,8 @@ controller.se2 =  (req, res) => {
         
         })
     });}else{
+        if(autenticado)
+           req.flash('auth','Tipo de usuario incorrecto, ingrese como administrador')
         res.redirect('/')
     }
 };
@@ -141,6 +154,19 @@ controller.ini =  (req, res) => {
 }
     
 };
+
+function getFechaHoy(){
+    var now = new Date();
+
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+    var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+
+    console.log(today)
+
+    return today
+}
 
 controller.verificar = (req, res) => {
     const data = req.body;

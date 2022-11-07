@@ -12,6 +12,16 @@
 <body style='background-image: url("../images/fondo4.jpg");background-repeat: repeat-x;background-repeat: repeat-y;
 background-size: 100%;'>
 
+
+<div  class="container-fluid">
+	<% if(Message!=null){%>
+	<%if(Message.length>0){ %>
+    <br><br><br> 
+		<div class="alert alert-danger" role="alert"><%= Message %></div>
+	<% }} %> 
+
+</div>
+
   <div class="container" >
     <div class="col-md-1"></div>
     <div class="col-md-7">

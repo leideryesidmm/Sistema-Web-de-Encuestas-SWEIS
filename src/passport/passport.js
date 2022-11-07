@@ -32,11 +32,12 @@ module.exports = function(passport){
                     return done(null,{
                         email:user.correo_electronico,
                         type:user.Rol
-                    });
+                    },req.flash('auth','Email o Password incorrectos'));
                 }
                 return done(null,false,req.flash('auth','Email o Password incorrectos'))
             }
+            return done(null,false,req.flash('auth','Email o Password incorrectos'));
         })
-        return;
+        
     }))
 };

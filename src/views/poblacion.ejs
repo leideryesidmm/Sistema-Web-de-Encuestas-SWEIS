@@ -42,10 +42,10 @@ background-size: 100%;'>
 	<div class="row ml-5 mr-5" style="text-align:center;">
 
 		<%for(let i=0;i<poblaciones.length;++i){%>
-		<div class="card" style="margin-bottom: 1%; background-color: #a7a4a454; width: 31%; text-align:center; margin-left: 25px;">
+		<div class="card" style="margin-bottom: 1%; background-color: #8885852c; width: 31%; text-align:center; margin-left: 25px;">
 		  <div class="card-body">
 		    <h5 class="card-title" name="nombre">Población <%=poblaciones[i].nombre%></h5>
-		    <a href="#encuestados<%= i %> " data-toggle="modal"><button style="background-color:#ffffff00;" type="submit" class="btn text-black">Ver</button></a>
+		    <a href="#encuestados<%= i %> " data-toggle="modal"><button style="background-color:#918787;" type="submit" class="btn text-white">Ver</button></a>
 		    <%var correos="'"%>
 			<%for(let o=0;o<encuestados.length;++o){%>
 				<% if(encuestados[o].id_poblacion==poblaciones[i].id_poblacion){%>
