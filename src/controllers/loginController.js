@@ -21,7 +21,7 @@ controller.mostrar =  (req, res) => {
 
 
 controller.se =  (req, res) => {
-    console.log("pasa")
+    //console.log("pasa")
     var autenticado=req.isAuthenticated()
     try {
         var type=req.user.type;
@@ -77,7 +77,7 @@ controller.se2 =  (req, res) => {
     if(autenticado&&type==0){
 
     var email=req.user.email
-    console.log(email)
+    //console.log(email)
     const data = req.body;
     var paso=false;
     req.getConnection((error, conn) =>{
@@ -87,7 +87,7 @@ controller.se2 =  (req, res) => {
             paso=true;
                 conn.query('SELECT ep.id_poblacion FROM encuestado e join encuestado_poblacion ep on e.correo_electronico=ep.encuestado where e.correo_electronico="'+email+'"', (err, rows) =>{
                         var s='';
-                        console.log(rows)
+                        //console.log(rows)
                     for(let i =0; i<rows.length;i++){
                         if(i+1==rows.length){
                             s+='"'+rows[i].id_poblacion+'"';
@@ -95,7 +95,7 @@ controller.se2 =  (req, res) => {
                             s+='"'+rows[i].id_poblacion+'" or población=';
                         }
                     }
-                    console.log(s)
+                   // console.log(s)
                     conn.query('Select * from (SELECT * from encuesta where población='+s+') z where z.id_encuesta not in (SELECT ec.id_encuesta as id_encuesta from encuesta_contestada ec where ec.encuestado="'+email+'") and z.id_encuesta in (SELECT id_encuesta from encuesta where fecha_cierre >="'+getFechaHoy()+'"and fecha_publicacion <="'+getFechaHoy()+'")', (err, enc) =>{
                         
                         if (err) {
@@ -134,6 +134,7 @@ controller.se2 =  (req, res) => {
 controller.ini =  (req, res) => {
     var autenticado=req.isAuthenticated()
     if(autenticado){
+        let email=req.user.email;
         const data = req.body;
         req.getConnection((error, conn) =>{
             conn.query('SELECT * FROM encuesta', (err, rows) =>{
@@ -142,7 +143,8 @@ controller.ini =  (req, res) => {
                 } else {
                     
                         res.render('inicio', {
-                            encuestas:rows
+                            encuestas:rows,
+                            email:email
                         })
                     
                     
@@ -163,7 +165,7 @@ function getFechaHoy(){
 
     var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
 
-    console.log(today)
+    //console.log(today)
 
     return today
 }

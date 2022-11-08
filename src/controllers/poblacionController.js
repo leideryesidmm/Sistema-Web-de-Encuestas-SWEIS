@@ -7,7 +7,7 @@ var SendGrid = require('sendgrid')
 controller.list =  (req, res) => {
     var autenticado=req.isAuthenticated()
     if(autenticado){
-
+        let email=req.user.email;
         req.getConnection((error, conn) =>{
         
             conn.query('SELECT * FROM poblacion', (err, po) =>{
@@ -16,7 +16,8 @@ controller.list =  (req, res) => {
                     res.render('poblacion', {
                         poblaciones:po,
                         encuestados: en,
-                        menssage:null
+                        menssage:null,
+                        email:email
                     })
             })
         })
@@ -30,6 +31,7 @@ controller.list =  (req, res) => {
 controller.save = (req, res) => {
     var autenticado=req.isAuthenticated()
     if(autenticado){
+        let email=req.user.email;
         const data = req.body;
         let correos=data.correos.split(",");
         let tamanio=correos.length
@@ -68,7 +70,8 @@ controller.save = (req, res) => {
                         res.render('poblacion',{
                             menssage: req.flash('info'),
                             poblaciones:po,
-                                    encuestados: en
+                            encuestados: en,
+                            email:email
                         });
                         })
                     })

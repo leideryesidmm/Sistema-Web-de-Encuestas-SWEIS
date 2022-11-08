@@ -11,8 +11,9 @@
 	<link rel="stylesheet" type="text/css" href="../../css/inicio.css"/>
 	
 </head>
-<body style='background-image: url("../images/fondo3.jpg");background-repeat: repeat-x;background-repeat: repeat-y;
-background-size: 100%;'>
+<body style='background-color:rgb(226, 224, 224)'>
+	<!--<body style='background-image: url("../../images/fondo4.jpg");background-repeat: repeat-x;background-repeat: repeat-y;
+	background-size: 100%;'>-->
 	<script rel="stylesheet" type="text/javascript" src=""></script>
 
 
@@ -22,8 +23,8 @@ background-size: 100%;'>
 				<a href="https://ingsistemas.cloud.ufps.edu.co/"><img src="../../images/logo.png" class="d-block" alt='...' height="70px" width="70px"></div></a>
 				<div id="fuente" class="col-md-5 text-white text-center"><br>	
 					<a href="/poblacion"><button type="button" onclick ="" class="btn text-white" style="font-family:Gill Sans; font-size: 20px;">Poblaciones</button></a>			
-					<a href="/inicio"><button type="button" onclick ="" class="btn text-white" style="font-family:Gill Sans; font-size: 20px;">Encuestas</button></a>
-						  <a href="#"><button type="button" class="btn text-white" style="font-family: Gill Sans; font-size: 20px;">Mi cuenta</button></a>
+					<a href="/sesionad2"><button type="button" onclick ="" class="btn text-white" style="font-family:Gill Sans; font-size: 20px;">Encuestas</button></a>
+					<button type="button" class="btn text-white" style="font-family: Gill Sans; font-size: 20px;"><%= email.split('@')[0] %></button>
 					
 				</div>				
 		</div>
@@ -32,14 +33,15 @@ background-size: 100%;'>
 
 
 
-<div id="contenido">
+<div id="contenido" style='background-image: url("../../images/fondo2.jpg");background-repeat: repeat-x;background-repeat: repeat-y;
+background-size: 100%;'>
 	<div class="text-center">
 		<b><label  id="center" style="font-family:'Helvetica'; font-weight: bold;margin: 0 auto;font-size: 28px; color:#e20319">Respuestas del encuestado <%=encuesta[0].encuestado%> a la encuesta <%=encuesta[0].nombre %> </label></b><br><br>
 	</div>
 
 
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-4" style="margin-left: 80px">
 			<label style=" font-family: Times-New-Roman;font-size: 20px; font-weight: bold;">Fecha contestada: </label>
 			<label style=" font-family: Times-New-Roman;font-size: 18px;"><%=encuesta[0].fecha_contestada.toLocaleString().split(",")[0].split(" ")[0]%></label>
 		</div>
@@ -54,7 +56,11 @@ background-size: 100%;'>
 			<%console.log(opciones.length)%>
 		<%for(let o= 0; o<opciones.length;o++){%>
 			<% if(preguntas[i].id_pregunta==opciones[o].id_pregunta){ %>
-					  <li><%=opciones[o].opcion%></li>
+					<% if(opciones[o].id_opcion==null){%>
+						<li><%=opciones[o].descripcion_Abierta%></li>
+					<%}else{ %> 
+					  <li><%=opciones[o].descripcion%></li>
+					<% } %> 
 			<% } %>
 		<%} %> </ul></div><br><hr><br>
 	<%} %> 
