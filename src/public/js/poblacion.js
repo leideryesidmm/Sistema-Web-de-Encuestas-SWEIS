@@ -11,7 +11,7 @@ function pulsar(e) {
 	<div class="row"> 
 		<div class="col-md-6">
 			<label style=" font-family: Times-New-Roman;font-size: 22px; margin-left: 80px;">Nueva población: </label>
-				<input type="text" name="nombre" placeholder="Nombre de la población" class="confondo" style="width: 300px; border-bottom:solid 2px; border-top: #FFFFFF; border-right:#FFFFFF ; border-left:#FFFFFF" requered>
+				<input type="text" name="nombre" placeholder="Nombre de la población" class="confondo" style="width: 300px; border-bottom:solid 2px; border-top: #FFFFFF; border-right:#FFFFFF ; border-left:#FFFFFF" required>
 		</div>
 		<div class="col-md-6">
 			<input type="file" name="archivo">

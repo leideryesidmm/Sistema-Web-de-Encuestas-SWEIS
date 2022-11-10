@@ -6,7 +6,10 @@ const passport = require('passport');
 
 router.get('/', loginController.mostrar)
 router.post('/inicio', loginController.ini)
+router.post('/nuevacontrasenia', loginController.nc)
+router.get('/logout', loginController.out)
 router.get('/sesionad2', loginController.se)
+router.get('/olvidocontra', loginController.olv)
 router.get('/sesionen2', loginController.se2)
 router.post('/sesionen',passport.authenticate('local',{
     successRedirect:'/sesionen2',

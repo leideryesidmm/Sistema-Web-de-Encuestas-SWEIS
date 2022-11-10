@@ -34,6 +34,8 @@ controller.save = (req, res) => {
         let email=req.user.email;
         const data = req.body;
         let correos=data.correos.split(",");
+        if(correos[0]==null){
+
         let tamanio=correos.length
         req.getConnection((err, conn) => {
             conn.query('INSERT INTO poblacion (nombre,tamanio) values ("'+data.nombre+'",'+tamanio+')', (err, rows) =>{
@@ -78,7 +80,20 @@ controller.save = (req, res) => {
                         }
                 })
             })
-        })
+        })}else{
+            req.getConnection((err, conn) => {
+            conn.query('SELECT * FROM poblacion', (err, po) =>{
+                conn.query('SELECT * FROM poblacion p join encuestado_poblacion ep on p.id_poblacion=ep.id_poblacion', (err, en) =>{
+                    req.flash('info','La poblacion ingresada en '+data.nombre+' esta vacia o no cumple con el formato de comas')
+            res.render('poblacion',{
+                menssage: req.flash('info'),
+                poblaciones:po,
+                encuestados: en,
+                email:email
+            });
+            })
+        })})
+        }
 }else{
         res.redirect('/')
 }

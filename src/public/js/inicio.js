@@ -39,3 +39,15 @@ function editarFechaCierre(x){
         </div>
     </div>`
 }
+
+function olvidoContrasena(){
+    console.log("paso");
+    document.getElementById("olvidarcontra").innerHTML="";
+    document.getElementById("olvidarcontra").innerHTML+= 
+        `<div class="olvidar  text-center" style="display: flex; align-items: center; text-align: center; justify-content: center;">
+        <div class="">
+                <b><label  class="form-label">Si esta registrado, se le enviará una nueva contraseña a su correo electrónico.</label></b><br>
+                <a href="/"><button type="button" id=" " class="btn btn-danger">Volver</button></a>
+                </div>
+        </div>`
+}

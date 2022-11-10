@@ -1,5 +1,6 @@
 const controller = {};
-
+const bcrypt = require('bcryptjs');
+var transport = require('../email/mailer.js');
 
 
 controller.mostrar =  (req, res) => {
@@ -19,6 +20,79 @@ controller.mostrar =  (req, res) => {
     
 };
 
+controller.nc =  (req, res) => {
+    const data = req.body;
+    let contrasenia = generarContraseña(data.correo);
+    let contra = encriptar(contrasenia);
+    console.log(data.correo);
+          req.getConnection((error, conn) =>{
+            conn.query('Select correo_electronico from encuestado', (err, correos) =>{
+                if(estaEncuestado(data.correo,correos)){
+                    conn.query('UPDATE encuestado SET contrasena="'+contra+'" WHERE correo_electronico="'+data.correo+'"', (err, rows) =>{
+                        console.log(generarinfocorreos(data.correo,contrasenia));
+                    })
+                console.log("esta")
+                }else{
+                console.log("no esta")}
+            })
+              
+              res.render('enviocontraseña')
+          })
+      
+};
+
+async function generarinfocorreos(correo,contrasenia){
+    console.log(correo)
+    console.log(contrasenia)
+    let info=await transport.sendMail({
+        from: '"SWEIS UFPS 📝📈📋" <sweisufps@gmail.com>', // sender address
+        to: correo, // list of receivers
+        subject: "Cambio de Contraseña", // Subject line
+        text: "Hola, se ha cambiado la contraseña en el Sistema Web de Encuesta de Ingenieria de Sistemas - SWEIS, tus nuevas credenciales son: \n correo: "+correo+"\n contraseña: "+contrasenia, // plain text body
+        html: "<img src='https://i.ibb.co/bQKsXBX/banner.png' alt='logo'><p>Hola, se ha cambiado la contraseña en el Sistema Web de Encuesta de Ingenieria de Sistemas - <b>SWEIS UFPS<b></p> <br> <p><a href='http://localhost:3000/'>Ingresa aquí</a> con las nuevas credenciales y verificar si tienes encuestas por llenar:</p> <br> <b>correo:</b> "+correo+"<br> <b>contraseña:</b> "+contrasenia, // html body
+      });
+      return info
+    //leideryesidmm@ufps.edu.co,jheyneralexanderld@ufps.edu.co,matildealexandraal@ufps.edu.co
+}
+
+function generarContraseña(correo){
+    const caracteres=4;
+    let contrasenia = ""
+    for(let i=0;i<caracteres;i++){
+        contrasenia+=correo[Math.floor(Math.random()*correo.length)]+Math.floor(Math.random()*9)
+    }
+    return contrasenia;
+}
+function encriptar(contrasenia){
+    var salt=bcrypt.genSaltSync(12);
+    var password=bcrypt.hashSync(contrasenia,salt)
+    return password;
+}
+
+function estaEncuestado(correo,correos){
+    let esta=false
+    for(let i=0;i<correos.length;i++){
+        if(correos[i].correo_electronico==correo){
+            esta=true
+        }
+    }
+    return esta
+}
+
+controller.out =  (req, res) => {
+    var autenticado=req.isAuthenticated()
+    if(autenticado){
+        req.logout(req.user, err => {
+        if(err) 
+        res.redirect("/");
+      });
+    }
+        res.redirect('/')
+};
+
+controller.olv =  (req, res) => {
+    res.render('olvidocontraseña');
+};
 
 controller.se =  (req, res) => {
     //console.log("pasa")

@@ -42,6 +42,16 @@ body{
   .moving{
     right:45%;
   }
+
+  .olvidar{
+    background-color: #d1d1d1;
+    height: 200px;
+    width: 50%;
+    margin-top: 15%;
+    margin-left: 25%;
+    
+
+  }
   
   .loginMsg, .signupMsg{
     width: 50%;
